@@ -405,6 +405,7 @@ static NSString *XCDReasonForErrorWithDictionary(NSDictionary *info, NSString *p
 {
 	NSMutableDictionary *streamURLs = [NSMutableDictionary new];
 	
+	NSMutableArray *zoedata = [NSMutableArray array];
 	for (NSObject *streamQuery in streamQueries)
 	{
 		NSDictionary *stream;
@@ -458,9 +459,15 @@ static NSString *XCDReasonForErrorWithDictionary(NSDictionary *info, NSString *p
 				}
 			}
 			
+			
 			streamURLs[@(itag.integerValue)] = URLBySettingParameter(streamURL, @"ratebypass", @"yes");
+			NSURL *theUrl = URLBySettingParameter(streamURL, @"ratebypass", @"yes");
+			[zoedata addObject:@[theUrl,stream]];
 		}
+		
+		
 	}
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"zoeYoutube" object:zoedata];
 	
 	return streamURLs.copy;
 }
